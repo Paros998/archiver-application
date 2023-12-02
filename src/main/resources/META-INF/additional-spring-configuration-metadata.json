@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "aws-s3-config.bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for aws-s3-config.bucket-name."
+    },
+    {
+      "name": "aws-s3-config.access-Key",
+      "type": "java.lang.String",
+      "description": "Description for aws-s3-config.access-Key."
+    },
+    {
+      "name": "aws-s3-config.secret-Key",
+      "type": "java.lang.String",
+      "description": "Description for aws-s3-config.secret-Key."
+    },
+    {
+      "name": "aws-s3-config.s3endpoint",
+      "type": "java.lang.String",
+      "description": "Description for aws-s3-config.s3endpoint."
+    }
+  ] }
