@@ -30,7 +30,7 @@ springdoc:
 
 logging:
   level:
-    root: debug
+    root: info
   file:
     name: archiver-app.log
 
