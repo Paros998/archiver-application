@@ -62,4 +62,10 @@ public class UserServiceImpl implements UserService {
                 .map(UserConverter::toUserDto)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public Optional<UserEntity> findUserEntityByUsername(final String username) {
+        return userDao.findByUsername(username);
+    }
 }

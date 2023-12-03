@@ -12,11 +12,17 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
 
 /**
  * The type Amazon config.
  */
+@EnableAsync
 @Configuration
 @EntityScan("com.pd.archiver.awsfiles.entity")
 @EnableJpaRepositories("com.pd.archiver.awsfiles.repository")
@@ -49,5 +55,22 @@ public class AmazonConfiguration {
                         s3Config.getS3endpoint(), Regions.EU_CENTRAL_1.name()
                 ))
                 .build();
+    }
+
+    /**
+     * Async executor executor.
+     *
+     * @return the executor
+     */
+    @Bean
+    @Primary
+    public Executor asyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(3);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("ArchiverBackupRunner-");
+        executor.initialize();
+        return executor;
     }
 }

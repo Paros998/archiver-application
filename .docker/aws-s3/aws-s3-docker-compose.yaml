@@ -21,6 +21,8 @@ services:
       /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
       /usr/bin/mc mb myminio/archived;
       /usr/bin/mc policy set public myminio/archived;
+      /usr/bin/mc mb myminio/archived-backup;
+      /usr/bin/mc policy set public myminio/archived-backup;
       exit 0;
       "
 volumes:

@@ -19,5 +19,10 @@
       "name": "aws-s3-config.s3endpoint",
       "type": "java.lang.String",
       "description": "Description for aws-s3-config.s3endpoint."
+    },
+    {
+      "name": "aws-s3-config.backup-bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for aws-s3-config.backup-bucket-name."
     }
   ] }

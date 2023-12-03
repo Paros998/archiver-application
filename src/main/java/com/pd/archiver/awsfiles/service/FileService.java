@@ -1,5 +1,6 @@
 package com.pd.archiver.awsfiles.service;
 
+import com.pd.archiver.awsfiles.api.FileUrls;
 import com.pd.archiver.awsfiles.entity.FileEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +42,7 @@ public interface FileService {
      * @param fileId the file id
      * @return the file url
      */
-    String getFileUrl(UUID fileId);
+    FileUrls getFileUrls(UUID fileId);
 
     /**
      * Gets file by id.
@@ -57,7 +58,7 @@ public interface FileService {
      * @param fileEntities the file entities
      * @return the files urls
      */
-    List<String> getFilesUrls(List<FileEntity> fileEntities);
+    List<FileUrls> getFilesUrls(List<FileEntity> fileEntities);
 
     /**
      * Delete file.

@@ -1,5 +1,6 @@
 package com.pd.archiver.awsfiles.controller;
 
+import com.pd.archiver.awsfiles.api.FileUrls;
 import com.pd.archiver.awsfiles.service.FileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,8 @@ public class FileController {
      * @return the file url
      */
     @GetMapping("{fileId}")
-    public String getFileUrl(final @NonNull @PathVariable UUID fileId) {
-        return fileService.getFileUrl(fileId);
+    public FileUrls getFileUrl(final @NonNull @PathVariable UUID fileId) {
+        return fileService.getFileUrls(fileId);
     }
 
     /**

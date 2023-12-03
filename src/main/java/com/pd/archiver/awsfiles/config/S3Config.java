@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "aws-s3-config")
 public class S3Config {
     private String bucketName;
+    private String backupBucketName;
     private String accessKey;
     private String secretKey;
     private String s3endpoint;

@@ -1,12 +1,12 @@
 package com.pd.archiver.awsfiles.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.pd.archiver.users.entity.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -18,6 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FileEntity implements Serializable {
     @Id
     @GeneratedValue(
@@ -29,4 +30,15 @@ public class FileEntity implements Serializable {
     )
     private UUID fileId;
     private String fileName;
+    private String originalFileName;
+    private Long fileSize;
+    private Integer version;
+    private LocalDateTime creationDate;
+    private String extension;
+    private Boolean backupReady = false;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private UserEntity fileOwner;
 }

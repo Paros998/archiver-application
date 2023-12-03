@@ -1,11 +1,14 @@
 package com.pd.archiver.users.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.pd.archiver.awsfiles.entity.FileEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,6 +30,10 @@ public class UserEntity {
 
     @ElementCollection(targetClass = String.class)
     private Set<String> roles;
+
+    @OneToMany(mappedBy = "fileOwner", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<FileEntity> userFiles;
 
     /**
      * Instantiates a new User entity.

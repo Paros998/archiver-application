@@ -36,6 +36,7 @@ logging:
 
 aws-s3-config:
   bucket-name: archived
+  backup-bucket-name: archived-backup
   access-Key: ${AWS_ACCESS_KEY:minio}
   secret-Key: ${AWS_ACCESS_KEY:minio123}
   s3endpoint: ${AWS_S3_URL:http://127.0.0.1:9000}

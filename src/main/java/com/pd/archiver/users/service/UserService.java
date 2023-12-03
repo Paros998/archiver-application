@@ -1,9 +1,11 @@
 package com.pd.archiver.users.service;
 
 import com.pd.archiver.users.api.UserDto;
+import com.pd.archiver.users.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,5 +27,13 @@ public interface UserService extends UserDetailsService {
      * @return the all users
      */
     List<UserDto> getAllUsers();
+
+    /**
+     * Find user entity by username optional.
+     *
+     * @param username the username
+     * @return the optional
+     */
+    Optional<UserEntity> findUserEntityByUsername(String username);
 
 }
