@@ -10,7 +10,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -104,8 +103,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/actuator/**", "/actuator/health/**","/swagger-ui/", "/swagger-ui/**",
-                                "/swagger-ui.html**", "/v3/api-docs/**").permitAll())
+                        .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
+                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**").permitAll())
+
+                //  API
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/files/**").hasAnyRole(Roles.USER.name()))
@@ -113,15 +114,38 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/users/**").hasAnyRole(Roles.ADMIN.name()))
 
+                // VIEWS
+
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/login", "/signUp").anonymous())
+
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/logout").fullyAuthenticated())
+
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/afterLogin").hasAnyRole(Roles.USER.name(), Roles.ADMIN.name()))
+
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/user").hasAnyRole(Roles.USER.name()))
+
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/admin").hasAnyRole(Roles.ADMIN.name()))
+
+//                .authorizeHttpRequests(requests -> requests.requestMatchers("/h2-console/**").permitAll())
+
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionFixation().migrateSession()
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false))
 
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .successForwardUrl("/afterLogin")
+                        .permitAll())
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
         ;

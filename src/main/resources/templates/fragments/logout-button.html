@@ -1,0 +1,5 @@
+<div th:if="${@userAuthService.isUserLoggedIn()}">
+	<form action="/logout" method="post">
+		<button type="submit" class="btn-danger p-2 rounded">Logout</button>
+	</form>
+</div>

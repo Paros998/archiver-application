@@ -22,12 +22,23 @@ public class UserAuthService {
      * @return the currently logged in user
      */
     public Optional<Authentication> getCurrentlyLoggedInUser() {
-        final Authentication auth = SecurityContextHolder. getContext(). getAuthentication();
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-          return Optional.of(auth);
+            return Optional.of(auth);
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Is user logged in boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isUserLoggedIn() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        return !(auth instanceof AnonymousAuthenticationToken);
     }
 }

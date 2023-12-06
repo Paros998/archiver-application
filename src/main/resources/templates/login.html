@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" href="/public/css/bootstrap.css">
+	<link rel="stylesheet" href="/public/css/index.css">
+	<link rel="stylesheet" href="/public/css/views/login.css">
+	
+	<script src="/public/js/bootstrap.js"></script>
+	<script src="/public/js/jquery-3.3.1.slim.min.js"></script>
+	<script src="/public/js/popper.min.js"></script>
+	
+	<script src="/public/js/views/login.js" type="module"></script>
+	
+	<title>Archiver Application</title>
+</head>
+<body>
+<header>
+	<div class="d-inline-flex container-fluid align-items-center justify-content-between px-4 py-2">
+		<div th:if="${param.logout != null}">
+			<h3 class="text-primary">Please Sign in Again to continue.</h3>
+		</div>
+		<div th:if="${param.logout == null}">
+			<h3 class="text-primary">Please Sign in to continue.</h3>
+		</div>
+		
+		<h4 th:if="${param.logout != null}" class="text-danger rounded-pill p-1">You have been logout successfully.</h4>
+	</div>
+</header>
+
+<main>
+	<div class="d-flex flex-column container-fluid align-items-center justify-content-center bg-light rounded p-2">
+		<h4>Pleas provide login data.</h4>
+		
+		<form action="/login" method="post" class="d-flex flex-column align-items-center justify-content-center">
+			<label class="input-group">
+				<input class="form-control" name="username" type="text" placeholder="Username" required>
+			</label>
+			<label class="input-group">
+				<input class="form-control" name="password" type="password" placeholder="Password" required>
+			</label>
+			<button type="submit" class="btn-primary mt-3 rounded-pill p-2 w-75">Submit</button>
+		</form>
+		
+		<a id="sign-up-redirect" th:href="@{/signUp}" class="btn-secondary mt-5 rounded-pill p-2">
+			Or sign up here, if you don't have an account .
+		</a>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

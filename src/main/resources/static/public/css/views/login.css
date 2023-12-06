@@ -1,0 +1,6 @@
+main {
+    & div {
+        height: inherit;
+        gap: 16px;
+    }
+}
