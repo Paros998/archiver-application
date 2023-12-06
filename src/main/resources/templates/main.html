@@ -4,18 +4,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-	<link rel="stylesheet" href="/public/css/bootstrap.css">
-	<link rel="stylesheet" href="/public/css/index.css">
-	
-	<script src="/public/js/bootstrap.js"></script>
-	<script src="/public/js/jquery-3.3.1.slim.min.js"></script>
-	<script src="/public/js/popper.min.js"></script>
+	<script th:replace="~{fragments/common-scripts}"></script>
 	
 	<title>Archiver Application</title>
 </head>
 <body>
 <header>
-	<div class="d-inline-flex container-fluid align-items-center justify-content-center px-4 py-2">
+	<div class="d-inline-flex container-fluid align-items-center justify-content-end px-4 py-2 bg-dark">
 		<div th:replace="~{fragments/logout-button}">Test</div>
 	</div>
 </header>
