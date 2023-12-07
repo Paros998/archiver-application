@@ -41,4 +41,11 @@ public class UserAuthService {
 
         return !(auth instanceof AnonymousAuthenticationToken);
     }
+
+    public String getCurrentUserName() {
+        if (isUserLoggedIn()) {
+            return SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+        return null;
+    }
 }

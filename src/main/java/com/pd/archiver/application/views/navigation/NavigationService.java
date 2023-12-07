@@ -39,15 +39,38 @@ public class NavigationService {
 
         List<NavigationModel> navigationModels = new ArrayList<>();
 
-        // TODO add lists
         if (roles.contains(Roles.USER.name())) {
-            navigationModels.addAll(Collections.emptyList());
+            navigationModels.addAll(userNavigations());
         }
 
         if (roles.contains(Roles.ADMIN.name())) {
-            navigationModels.addAll(Collections.emptyList());
+            navigationModels.addAll(userNavigations());
+            navigationModels.addAll(adminNavigations());
         }
 
         return navigationModels;
     }
+
+    private static List<NavigationModel> userNavigations() {
+        return List.of(
+            NavigationModel.builder()
+                    .label("Dashboard")
+                    .url("/main")
+                    .build(),
+            NavigationModel.builder()
+                    .label("My-Files")
+                    .url("/myFiles")
+                    .build()
+        );
+    }
+
+    private static List<NavigationModel> adminNavigations() {
+        return List.of(
+            NavigationModel.builder()
+                    .label("Users")
+                    .url("/users")
+                    .build()
+        );
+    }
+
 }

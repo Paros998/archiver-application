@@ -104,7 +104,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
-                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**").permitAll())
+                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico").permitAll())
 
                 //  API
 
@@ -123,13 +123,10 @@ public class SecurityConfig {
                         .requestMatchers("/logout").fullyAuthenticated())
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/afterLogin").hasAnyRole(Roles.USER.name(), Roles.ADMIN.name()))
+                        .requestMatchers("/main", "/myFiles").hasAnyRole(Roles.USER.name()))
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/user").hasAnyRole(Roles.USER.name()))
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/admin").hasAnyRole(Roles.ADMIN.name()))
+                        .requestMatchers("/users").hasAnyRole(Roles.ADMIN.name()))
 
 //                .authorizeHttpRequests(requests -> requests.requestMatchers("/h2-console/**").permitAll())
 
@@ -140,7 +137,7 @@ public class SecurityConfig {
 
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
-                        .successForwardUrl("/afterLogin")
+                        .successForwardUrl("/")
                         .permitAll())
 
                 .logout(logout -> logout

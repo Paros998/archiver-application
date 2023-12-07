@@ -6,6 +6,8 @@
 	
 	<script th:replace="~{fragments/common-scripts}"></script>
 	
+	<script src="/public/js/views/myFiles.js"></script>
+	
 	<title>Archiver Application</title>
 </head>
 <body>
@@ -16,8 +18,9 @@
 	</div>
 </header>
 
-<main class="bg-light">
+<main class="bg-light d-flex">
 	<div th:replace="~{fragments/navbar}"></div>
+	<button onclick="fetchFiles()">Fetch Files</button>
 </main>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
