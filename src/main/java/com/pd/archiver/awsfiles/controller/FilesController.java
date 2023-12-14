@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequestMapping(path = "api/v1/files")
 @AllArgsConstructor
 @Tag(name = "Files")
-public class FileController {
+public class FilesController {
     private final FileService fileService;
 
     /**

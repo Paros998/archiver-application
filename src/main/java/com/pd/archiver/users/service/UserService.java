@@ -1,5 +1,6 @@
 package com.pd.archiver.users.service;
 
+import com.pd.archiver.awsfiles.api.FileDto;
 import com.pd.archiver.users.api.UserDto;
 import com.pd.archiver.users.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,4 +37,9 @@ public interface UserService extends UserDetailsService {
      */
     Optional<UserEntity> findUserEntityByUsername(String username);
 
+    List<FileDto> getUserFiles(UUID userId);
+
+    UserDto getUserById(UUID userId);
+
+    UserEntity getUserEntityById(UUID userId);
 }

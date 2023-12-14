@@ -17,9 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserAuthService {
     /**
-     * Gets currently logged in user.
+     * Gets currently logged-in user.
      *
-     * @return the currently logged in user
+     * @return the currently logged-in user
      */
     public Optional<Authentication> getCurrentlyLoggedInUser() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -40,12 +40,5 @@ public class UserAuthService {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return !(auth instanceof AnonymousAuthenticationToken);
-    }
-
-    public String getCurrentUserName() {
-        if (isUserLoggedIn()) {
-            return SecurityContextHolder.getContext().getAuthentication().getName();
-        }
-        return null;
     }
 }

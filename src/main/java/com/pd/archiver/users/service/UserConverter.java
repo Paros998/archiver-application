@@ -23,7 +23,7 @@ public class UserConverter {
      */
     public static UserDto toUserDto(final UserEntity user) {
         return UserDto.builder()
-                .id(String.valueOf(user.getId()))
+                .userId(String.valueOf(user.getId()))
                 .username(user.getUsername())
                 .enabled(user.isEnabled())
                 .roles(user.getRoles())

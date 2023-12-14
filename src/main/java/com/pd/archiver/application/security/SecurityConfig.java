@@ -1,16 +1,22 @@
 package com.pd.archiver.application.security;
 
+import com.pd.archiver.application.security.jwt.JwtTokenFilter;
 import com.pd.archiver.users.domain.Roles;
+import com.pd.archiver.users.service.UserService;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,6 +31,7 @@ import java.util.List;
  */
 @Configuration
 public class SecurityConfig {
+
 
     /**
      * B crypt password encoder b crypt password encoder.
@@ -44,8 +51,13 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://localhost:8080"));
+        String acao = "Access-Control-Allow-Origin";
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://localhost:8080", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(Arrays.asList("Origin", acao, "Content-Type", "Accept",
+                "Authorization", "Origin , Accept", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        configuration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept",
+                "Authorization", acao, acao, "Access-Control-Allow-Credentials"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -86,6 +98,20 @@ public class SecurityConfig {
         return expressionHandler;
     }
 
+    @Bean
+    public FormLoginAuthenticationFilter formLoginAuthenticationFilter(final UserService userService,
+                                                                              final @NonNull AuthenticationManager authenticationManager,
+                                                                              final @Value("${jwt.secret}") String jwtSecret) {
+        var formLoginAuthenticationFilter = new FormLoginAuthenticationFilter(authenticationManager, userService, jwtSecret);
+        formLoginAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        return formLoginAuthenticationFilter;
+    }
+
+    @Bean
+    public JwtTokenFilter jwtTokenFilter(final @Value("${jwt.secret}") String jwtSecret) {
+        return new JwtTokenFilter(jwtSecret);
+    }
+
     /**
      * Security filter chain security filter chain.
      *
@@ -96,11 +122,19 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http,
-                                                   final @NonNull AuthenticationProvider authenticationProvider) throws Exception {
+                                                   final @NonNull AuthenticationProvider authenticationProvider,
+                                                   final @NonNull JwtTokenFilter jwtTokenFilter,
+                                                   final @NonNull FormLoginAuthenticationFilter formLoginAuthenticationFilter)
+            throws Exception {
         http
                 .authenticationProvider(authenticationProvider)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractAuthenticationFilterConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+
+                .addFilter(formLoginAuthenticationFilter)
+                .addFilterAfter(jwtTokenFilter, FormLoginAuthenticationFilter.class)
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
@@ -109,42 +143,13 @@ public class SecurityConfig {
                 //  API
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/files/**").hasAnyRole(Roles.USER.name()))
+                        .requestMatchers("/api/v1/files/**", "/api/v1/users/**").hasAnyRole(Roles.USER.name()))
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/users/**").hasAnyRole(Roles.ADMIN.name()))
-
-                // VIEWS
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/login", "/signUp").anonymous())
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/logout").fullyAuthenticated())
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/main", "/myFiles").hasAnyRole(Roles.USER.name()))
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/users").hasAnyRole(Roles.ADMIN.name()))
-
-//                .authorizeHttpRequests(requests -> requests.requestMatchers("/h2-console/**").permitAll())
+                        .requestMatchers("/login", "/register").anonymous())
 
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionFixation().migrateSession()
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false))
-
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .successForwardUrl("/")
-                        .permitAll())
-
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         ;
 
         return http.build();

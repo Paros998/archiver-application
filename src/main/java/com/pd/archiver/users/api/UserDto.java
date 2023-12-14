@@ -15,7 +15,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 public class UserDto {
-    private String id;
+    private String userId;
     private String username;
 
     @JsonIgnore

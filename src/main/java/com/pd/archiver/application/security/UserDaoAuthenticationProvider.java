@@ -3,6 +3,7 @@ package com.pd.archiver.application.security;
 import com.pd.archiver.users.entity.UserEntity;
 import com.pd.archiver.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-public class UserDaoAuthenticationProvider implements AuthenticationProvider {
+public class UserDaoAuthenticationProvider implements AuthenticationManager, AuthenticationProvider {
     private final UserRepository userDao;
     private final PasswordEncoder passwordEncoder;
 

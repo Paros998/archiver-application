@@ -23,12 +23,4 @@ public class AuthenticationHttpEndpoint {
         throw new NotImplementedException("/login should not be called");
     }
 
-    /**
-     * Logout.
-     */
-    @PostMapping(value = "/logout")
-    public void logout() {
-        throw new NotImplementedException("/logout should not be called");
-    }
-
 }
