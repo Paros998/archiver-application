@@ -53,7 +53,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         String acao = "Access-Control-Allow-Origin";
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://localhost:8080", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://localhost:8080", "http://localhost:3000",
+                "https://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("Origin", acao, "Content-Type", "Accept",
                 "Authorization", "Origin , Accept", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
@@ -139,7 +140,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
-                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico").permitAll())
+                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico", "/error").permitAll())
 
                 //  API
 
