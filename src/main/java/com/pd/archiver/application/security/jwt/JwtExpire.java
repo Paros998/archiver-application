@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum JwtExpire {
-    ACCESS_TOKEN(20 * 60 * 1000);
+    ACCESS_TOKEN(60 * 60 * 1000);
 
     private final Integer amount;
 
