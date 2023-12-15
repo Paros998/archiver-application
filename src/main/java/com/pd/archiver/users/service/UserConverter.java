@@ -6,9 +6,11 @@ import com.pd.archiver.users.domain.UserRoleNotExistException;
 import com.pd.archiver.users.entity.UserEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The type User converter.
@@ -44,5 +46,9 @@ public class UserConverter {
         });
 
         return new UserEntity(userDto.getUsername(), userDto.getPassword(), true, userDto.getRoles());
+    }
+
+    public static UserEntity toUserEntity(final String username, final String password, final @NonNull Set<String> roles) {
+        return new UserEntity(username, password, true, roles);
     }
 }

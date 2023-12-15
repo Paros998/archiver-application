@@ -1,15 +1,13 @@
 package com.pd.archiver.users.controller;
 
 import com.pd.archiver.awsfiles.api.FileDto;
+import com.pd.archiver.users.api.RegisterRequest;
 import com.pd.archiver.users.api.UserDto;
 import com.pd.archiver.users.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,5 +27,10 @@ public class UsersHttpEndpoint {
     @GetMapping("{userId}")
     public UserDto getUserById(final @PathVariable @NonNull UUID userId) {
         return userService.getUserById(userId);
+    }
+
+    @PostMapping("register")
+    public UUID registerUser(final @NonNull @RequestBody RegisterRequest request) {
+        return userService.registerNewUser(request.getUsername(), request.getPassword());
     }
 }

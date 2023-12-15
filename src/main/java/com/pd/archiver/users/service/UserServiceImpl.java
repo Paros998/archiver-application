@@ -3,6 +3,7 @@ package com.pd.archiver.users.service;
 import com.pd.archiver.awsfiles.api.FileDto;
 import com.pd.archiver.awsfiles.util.FileMapper;
 import com.pd.archiver.users.api.UserDto;
+import com.pd.archiver.users.domain.Roles;
 import com.pd.archiver.users.entity.UserEntity;
 import com.pd.archiver.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -54,9 +56,7 @@ public class UserServiceImpl implements UserService {
         log.info("Starting processing user creation request: {}", createDto);
 
         val user = UserConverter.toUserEntity(createDto);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        return userDao.save(user).getId();
+        return saveUser(user);
     }
 
     @Override
@@ -90,6 +90,23 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserEntity getUserEntityById(final UUID userId) {
         return fetchUserById(userId);
+    }
+
+    @Override
+    public UUID registerNewUser(final String username, final String password) {
+        log.info("Starting processing user register request: [{}, {}]", username, password);
+
+        if (userDao.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        val user = UserConverter.toUserEntity(username, password, Set.of(Roles.USER.name()));
+        return saveUser(user);
+    }
+
+    private UUID saveUser(final UserEntity user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userDao.save(user).getId();
     }
 
     private UserEntity fetchUserById(final UUID userId) {

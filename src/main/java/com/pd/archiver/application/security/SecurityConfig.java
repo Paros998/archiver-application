@@ -7,6 +7,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -143,10 +144,13 @@ public class SecurityConfig {
                 //  API
 
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register").anonymous())
+
+                .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/files/**", "/api/v1/users/**").hasAnyRole(Roles.USER.name()))
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/login", "/register").anonymous())
+                        .requestMatchers("/login").anonymous())
 
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

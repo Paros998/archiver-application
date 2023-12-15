@@ -42,4 +42,6 @@ public interface UserService extends UserDetailsService {
     UserDto getUserById(UUID userId);
 
     UserEntity getUserEntityById(UUID userId);
+
+    UUID registerNewUser(String username, String password);
 }
