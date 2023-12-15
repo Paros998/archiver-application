@@ -38,6 +38,7 @@ public class FileServiceImpl implements FileService {
     private static final Integer EXTENSION_INDEX = 1;
     private static final Integer FIFTY_MB = 52_428_800;
     private static final String FILE_IS_TO_BIG = "File is to big";
+    private static final String FILE_FORMAT = "%s.%s";
 
     private final AmazonS3 s3client;
     private final S3Config s3Config;
@@ -85,7 +86,7 @@ public class FileServiceImpl implements FileService {
 
         String extension = fileData[EXTENSION_INDEX];
         String fileName = UUID.randomUUID().toString();
-        String newFileName = fileName + "." + extension;
+        String newFileName = String.format(FILE_FORMAT, fileName, extension);
 
         if (fileRepository.existsByFileName(newFileName))
             return fileRepository.getByFileName(newFileName).getFileId();
@@ -141,6 +142,33 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    @Transactional
+    public void updateFileName(final UUID fileId, final String newName) {
+        // todo check for permission to change file name, ADMIN = true, USER = true if fileEntity owner is current user
+
+        FileEntity fileEntity = getFileById(fileId);
+        String oldName = fileEntity.getFileName();
+        String fullNewName = String.format(FILE_FORMAT, newName, fileEntity.getExtension());
+        fileEntity.setFileName(fullNewName);
+
+        fileRepository.saveAndFlush(fileEntity);
+
+        s3client.copyObject(s3Config.getBucketName(), oldName, s3Config.getBucketName(), fullNewName);
+
+        asyncExecutor.execute(() -> {
+            try {
+                s3client.deleteObject(s3Config.getBucketName(), oldName);
+                updateBackupStatus(fileEntity.getFileId(), false);
+                s3client.copyObject(s3Config.getBucketName(), fullNewName, s3Config.getBackupBucketName(), fullNewName);
+                updateBackupStatus(fileEntity.getFileId(), true);
+                s3client.deleteObject(s3Config.getBackupBucketName(), oldName);
+            } catch (final SdkClientException e) {
+                log.error("Error occurred while clearing file from backup, details: {}", e.getLocalizedMessage());
+            }
+        });
+    }
+
+    @Override
     public FileEntity getFileById(final UUID fileId) {
         return fileRepository.findById(fileId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(fileId))
@@ -183,17 +211,17 @@ public class FileServiceImpl implements FileService {
         asyncExecutor.execute(() -> {
             log.info("Backup of file {} started", name);
             try {
-                s3client.putObject(s3Config.getBackupBucketName(), name, file.getInputStream(), metadata);
-            } catch (final IOException e) {
+                s3client.copyObject(s3Config.getBucketName(), name, s3Config.getBackupBucketName(), name);
+            } catch (final SdkClientException e) {
                 log.error("An error occurred while creating a backup, details: {}", e.getLocalizedMessage());
             }
-            updateBackupStatus(newFile.getFileId());
+            updateBackupStatus(newFile.getFileId(), true);
         });
 
         return newFile;
     }
 
-    private void updateBackupStatus(final UUID fileId) {
+    private void updateBackupStatus(final UUID fileId, final boolean isReady) {
         Optional<FileEntity> fileBox = fileRepository.findById(fileId);
 
         if (fileBox.isEmpty()) {
@@ -202,8 +230,10 @@ public class FileServiceImpl implements FileService {
         }
 
         FileEntity file = fileBox.get();
-        file.setBackupReady(true);
+        file.setBackupReady(isReady);
         fileRepository.save(file);
-        log.info("Backup of file {} finished", file.getFileName());
+        if (isReady) {
+            log.info("Backup of file {} finished", file.getFileName());
+        } else log.info("Backup of file {} revoked", file.getFileName());
     }
 }

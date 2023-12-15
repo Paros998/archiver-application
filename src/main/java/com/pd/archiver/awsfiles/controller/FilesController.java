@@ -52,4 +52,9 @@ public class FilesController {
     public void deleteFile(final @NonNull @PathVariable UUID fileId) {
         fileService.deleteFile(fileId);
     }
+
+    @PatchMapping("{fileId}/name/{newName}")
+    public void updateFileName(final @NonNull @PathVariable UUID fileId, final @NonNull @PathVariable String newName) {
+        fileService.updateFileName(fileId, newName);
+    }
 }

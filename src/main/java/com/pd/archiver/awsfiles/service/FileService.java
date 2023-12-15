@@ -66,4 +66,6 @@ public interface FileService {
      * @param fileId the file id
      */
     void deleteFile(UUID fileId);
+
+    void updateFileName(UUID fileId, String newName);
 }
