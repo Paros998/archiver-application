@@ -24,6 +24,12 @@ public class UsersHttpEndpoint {
         return userService.getUserFiles(userId);
     }
 
+    @GetMapping("{userId}/files/last")
+    public List<FileDto> getLasUserFiles(final @NonNull @PathVariable UUID userId,
+                                         final @RequestParam(required = false, defaultValue = "3") int limit) {
+        return userService.getLastUserFiles(userId, limit);
+    }
+
     @GetMapping("{userId}")
     public UserDto getUserById(final @PathVariable @NonNull UUID userId) {
         return userService.getUserById(userId);

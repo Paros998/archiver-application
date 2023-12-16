@@ -145,13 +145,10 @@ public class SecurityConfig {
                 //  API
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register").anonymous())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register", "/login").anonymous())
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/files/**", "/api/v1/users/**").hasAnyRole(Roles.USER.name()))
-
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/login").anonymous())
 
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

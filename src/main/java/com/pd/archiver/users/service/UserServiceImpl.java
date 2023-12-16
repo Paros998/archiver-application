@@ -1,6 +1,7 @@
 package com.pd.archiver.users.service;
 
 import com.pd.archiver.awsfiles.api.FileDto;
+import com.pd.archiver.awsfiles.util.FileEntityDateComparator;
 import com.pd.archiver.awsfiles.util.FileMapper;
 import com.pd.archiver.users.api.UserDto;
 import com.pd.archiver.users.domain.Roles;
@@ -102,6 +103,16 @@ public class UserServiceImpl implements UserService {
 
         val user = UserConverter.toUserEntity(username, password, Set.of(Roles.USER.name()));
         return saveUser(user);
+    }
+
+    @Override
+    @Transactional
+    public List<FileDto> getLastUserFiles(final UUID userId, final int limit) {
+        return fetchUserById(userId).getUserFiles().stream()
+                .sorted(FileEntityDateComparator::sortByNewest)
+                .limit(limit)
+                .map(FileMapper::toFileDto)
+                .toList();
     }
 
     private UUID saveUser(final UserEntity user) {

@@ -44,4 +44,6 @@ public interface UserService extends UserDetailsService {
     UserEntity getUserEntityById(UUID userId);
 
     UUID registerNewUser(String username, String password);
+
+    List<FileDto> getLastUserFiles(UUID userId, int limit);
 }
