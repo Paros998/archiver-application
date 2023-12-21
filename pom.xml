@@ -24,6 +24,8 @@
         <aws-lib-version>1.12.435</aws-lib-version>
         <spring-doc.version>2.1.0</spring-doc.version>
         <jwt-api-version>0.11.5</jwt-api-version>
+        <jax-b.version>2.3.1</jax-b.version>
+        <apache-commons.version>2.15.1</apache-commons.version>
     </properties>
 
     <dependencyManagement>
@@ -57,6 +59,16 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jwt-api-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jax-b.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${apache-commons.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -94,6 +106,14 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <dependency>

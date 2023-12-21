@@ -27,6 +27,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
+import static org.apache.commons.io.FilenameUtils.getBaseName;
+import static org.apache.commons.io.FilenameUtils.getExtension;
+
 /**
  * The type File service.
  */
@@ -175,8 +178,8 @@ public class FileServiceImpl implements FileService {
         );
     }
 
-    private String[] getFileData(final String originalFileName) {
-        return Objects.requireNonNull(originalFileName).split("\\.");
+    private String[] getFileData(final @NonNull String originalFileName) {
+        return new String[]{getBaseName(originalFileName), getExtension(originalFileName)};
     }
 
     private FileEntity saveNewFile(final MultipartFile file, final String name, final String originalName, final String extension) {
