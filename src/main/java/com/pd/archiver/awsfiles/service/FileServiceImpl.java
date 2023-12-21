@@ -150,8 +150,10 @@ public class FileServiceImpl implements FileService {
         // todo check for permission to change file name, ADMIN = true, USER = true if fileEntity owner is current user
 
         FileEntity fileEntity = getFileById(fileId);
-        String oldName = fileEntity.getFileName();
         String fullNewName = String.format(FILE_FORMAT, newName, fileEntity.getExtension());
+        validateNewName(fullNewName);
+
+        String oldName = fileEntity.getFileName();
         fileEntity.setFileName(fullNewName);
 
         fileRepository.saveAndFlush(fileEntity);
@@ -169,6 +171,17 @@ public class FileServiceImpl implements FileService {
                 log.error("Error occurred while clearing file from backup, details: {}", e.getLocalizedMessage());
             }
         });
+    }
+
+    public boolean checkNewNameExistence(final @NonNull String name, final @NonNull String extension) {
+        return fileRepository.existsByFileName(String.format(FILE_FORMAT, name, extension));
+    }
+
+    private void validateNewName(final @NonNull String fullNewName) {
+        if (fileRepository.existsByFileName(fullNewName)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("File with this name and extension: [%s] already exists", fullNewName));
+        }
     }
 
     @Override
@@ -207,6 +220,7 @@ public class FileServiceImpl implements FileService {
                 .fileSize(file.getSize()) // in bytes
                 .extension(extension)
                 .version(1) // new file always version 1
+                .backupReady(false)
                 .build();
 
         fileRepository.save(newFile);

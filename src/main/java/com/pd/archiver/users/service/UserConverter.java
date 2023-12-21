@@ -48,6 +48,14 @@ public class UserConverter {
         return new UserEntity(userDto.getUsername(), userDto.getPassword(), true, userDto.getRoles());
     }
 
+    /**
+     * To user entity.
+     *
+     * @param username the username
+     * @param password the password
+     * @param roles    the roles
+     * @return the user entity
+     */
     public static UserEntity toUserEntity(final String username, final String password, final @NonNull Set<String> roles) {
         return new UserEntity(username, password, true, roles);
     }

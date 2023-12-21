@@ -1,6 +1,7 @@
 package com.pd.archiver.awsfiles.controller;
 
 import com.pd.archiver.awsfiles.api.FileUrls;
+import com.pd.archiver.awsfiles.api.NameValidationRequest;
 import com.pd.archiver.awsfiles.service.FileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,17 @@ public class FilesController {
     }
 
     /**
+     * Check name existence boolean.
+     *
+     * @param request the request
+     * @return the boolean
+     */
+    @PostMapping("name-check")
+    public Boolean checkNameExistence(final @NonNull @RequestBody NameValidationRequest request) {
+        return fileService.checkNewNameExistence(request.getName(), request.getExtension());
+    }
+
+    /**
      * Upload file uuid.
      *
      * @param file the file
@@ -53,7 +65,13 @@ public class FilesController {
         fileService.deleteFile(fileId);
     }
 
-    @PatchMapping("{fileId}/name/{newName}")
+    /**
+     * Update file name.
+     *
+     * @param fileId  the file id
+     * @param newName the new name
+     */
+    @PutMapping("{fileId}/name/{newName}")
     public void updateFileName(final @NonNull @PathVariable UUID fileId, final @NonNull @PathVariable String newName) {
         fileService.updateFileName(fileId, newName);
     }

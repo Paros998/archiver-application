@@ -37,13 +37,45 @@ public interface UserService extends UserDetailsService {
      */
     Optional<UserEntity> findUserEntityByUsername(String username);
 
+    /**
+     * Gets user files.
+     *
+     * @param userId the user id
+     * @return the user files
+     */
     List<FileDto> getUserFiles(UUID userId);
 
+    /**
+     * Gets user by id.
+     *
+     * @param userId the user id
+     * @return the user by id
+     */
     UserDto getUserById(UUID userId);
 
+    /**
+     * Gets user entity by id.
+     *
+     * @param userId the user id
+     * @return the user entity by id
+     */
     UserEntity getUserEntityById(UUID userId);
 
+    /**
+     * Register new user uuid.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the uuid
+     */
     UUID registerNewUser(String username, String password);
 
+    /**
+     * Gets last user files.
+     *
+     * @param userId the user id
+     * @param limit  the limit
+     * @return the last user files
+     */
     List<FileDto> getLastUserFiles(UUID userId, int limit);
 }

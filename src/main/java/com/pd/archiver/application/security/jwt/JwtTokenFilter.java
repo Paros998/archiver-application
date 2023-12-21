@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Jwt token filter.
+ */
 @AllArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final String secretKey;

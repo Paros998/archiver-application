@@ -2,6 +2,9 @@ package com.pd.archiver.users.api;
 
 import lombok.*;
 
+/**
+ * The type Register request.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

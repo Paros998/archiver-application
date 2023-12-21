@@ -7,14 +7,29 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+/**
+ * The type File mapper.
+ */
 @UtilityClass
 public class FileMapper {
+    /**
+     * To file dto list.
+     *
+     * @param entities the entities
+     * @return the list
+     */
     public List<FileDto> toFileDtoList(final @NonNull List<FileEntity> entities) {
         return entities.stream()
                 .map(FileMapper::toFileDto)
                 .toList();
     }
 
+    /**
+     * To file dto.
+     *
+     * @param entity the entity
+     * @return the file dto
+     */
     public FileDto toFileDto(final @NonNull FileEntity entity) {
         return FileDto.builder()
                 .fileId(entity.getFileId())

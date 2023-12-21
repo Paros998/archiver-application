@@ -67,5 +67,20 @@ public interface FileService {
      */
     void deleteFile(UUID fileId);
 
+    /**
+     * Update file name.
+     *
+     * @param fileId  the file id
+     * @param newName the new name
+     */
     void updateFileName(UUID fileId, String newName);
+
+    /**
+     * Check new name existence boolean.
+     *
+     * @param name      the name
+     * @param extension the extension
+     * @return the boolean
+     */
+    boolean checkNewNameExistence(String name, String extension);
 }

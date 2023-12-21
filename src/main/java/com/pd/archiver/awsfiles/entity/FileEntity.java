@@ -35,7 +35,7 @@ public class FileEntity implements Serializable {
     private Integer version;
     private LocalDateTime creationDate;
     private String extension;
-    private Boolean backupReady = false;
+    private Boolean backupReady;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

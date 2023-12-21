@@ -77,8 +77,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<FileDto> getUserFiles(final UUID userId) {
-        val user = fetchUserById(userId);
-        return FileMapper.toFileDtoList(user.getUserFiles());
+        return fetchUserById(userId).getUserFiles().stream()
+                .sorted(FileEntityDateComparator::sortByNewest)
+                .map(FileMapper::toFileDto)
+                .toList();
     }
 
     @Override

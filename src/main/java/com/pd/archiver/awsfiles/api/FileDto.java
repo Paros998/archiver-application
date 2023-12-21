@@ -16,12 +16,36 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class FileDto implements Serializable {
+    /**
+     * The File id.
+     */
     UUID fileId;
+    /**
+     * The File name.
+     */
     String fileName;
+    /**
+     * The Original file name.
+     */
     String originalFileName;
+    /**
+     * The File size.
+     */
     Long fileSize;
+    /**
+     * The Version.
+     */
     Integer version;
+    /**
+     * The Creation date.
+     */
     LocalDateTime creationDate;
+    /**
+     * The Extension.
+     */
     String extension;
+    /**
+     * The Backup ready.
+     */
     Boolean backupReady;
 }

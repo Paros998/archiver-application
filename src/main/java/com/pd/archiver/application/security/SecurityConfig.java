@@ -100,6 +100,14 @@ public class SecurityConfig {
         return expressionHandler;
     }
 
+    /**
+     * Form login authentication filter form login authentication filter.
+     *
+     * @param userService           the user service
+     * @param authenticationManager the authentication manager
+     * @param jwtSecret             the jwt secret
+     * @return the form login authentication filter
+     */
     @Bean
     public FormLoginAuthenticationFilter formLoginAuthenticationFilter(final UserService userService,
                                                                               final @NonNull AuthenticationManager authenticationManager,
@@ -109,6 +117,12 @@ public class SecurityConfig {
         return formLoginAuthenticationFilter;
     }
 
+    /**
+     * Jwt token filter jwt token filter.
+     *
+     * @param jwtSecret the jwt secret
+     * @return the jwt token filter
+     */
     @Bean
     public JwtTokenFilter jwtTokenFilter(final @Value("${jwt.secret}") String jwtSecret) {
         return new JwtTokenFilter(jwtSecret);
@@ -117,8 +131,10 @@ public class SecurityConfig {
     /**
      * Security filter chain security filter chain.
      *
-     * @param http                   the http
-     * @param authenticationProvider the authentication provider
+     * @param http                          the http
+     * @param authenticationProvider        the authentication provider
+     * @param jwtTokenFilter                the jwt token filter
+     * @param formLoginAuthenticationFilter the form login authentication filter
      * @return the security filter chain
      * @throws Exception the exception
      */

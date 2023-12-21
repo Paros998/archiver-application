@@ -24,6 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 
+/**
+ * The type Form login authentication filter.
+ */
 @Getter
 @AllArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
