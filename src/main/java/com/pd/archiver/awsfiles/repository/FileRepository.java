@@ -2,7 +2,8 @@ package com.pd.archiver.awsfiles.repository;
 
 import com.pd.archiver.awsfiles.entity.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.UUID;
 
@@ -26,4 +27,13 @@ public interface FileRepository extends JpaRepository<FileEntity, UUID>  {
      * @return the by file name
      */
     FileEntity getByFileName(String fileName);
+
+    boolean existsByOriginalFileName(String originalFileName);
+
+    @Query("SELECT count(f.version) FROM FileEntity f WHERE f.originalFileName = :originalFileName")
+    Integer findMaxVersionByOriginalFileName(@Param("originalFileName") String originalFileName);
+
 }
+
+
+
