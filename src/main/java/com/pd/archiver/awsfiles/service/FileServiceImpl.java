@@ -39,6 +39,8 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 public class FileServiceImpl implements FileService {
     private static final Integer FILE_NAME_INDEX = 0;
     private static final Integer EXTENSION_INDEX = 1;
+
+    private static final Integer VERSION_INDEX = 2;
     private static final Integer FIFTY_MB = 52_428_800;
     private static final String FILE_IS_TO_BIG = "File is to big";
     private static final String FILE_FORMAT = "%s.%s";
@@ -72,9 +74,10 @@ public class FileServiceImpl implements FileService {
         String[] fileData = getFileData(Objects.requireNonNull(file.getOriginalFilename()));
 
         String fileName = file.getName();
+        Integer version = Integer.valueOf(fileData[VERSION_INDEX]);
 
         if (!fileRepository.existsByFileName(fileName)) {
-            FileEntity fileEntity = saveNewFile(file, fileName, fileData[FILE_NAME_INDEX], fileData[EXTENSION_INDEX]);
+            FileEntity fileEntity = saveNewFile(file, fileName, fileData[FILE_NAME_INDEX], fileData[EXTENSION_INDEX], version);
             return fileEntity.getFileId();
         }
         return fileRepository.getByFileName(fileName).getFileId();
@@ -90,11 +93,12 @@ public class FileServiceImpl implements FileService {
         String extension = fileData[EXTENSION_INDEX];
         String fileName = UUID.randomUUID().toString();
         String newFileName = String.format(FILE_FORMAT, fileName, extension);
+        Integer version = Integer.valueOf(fileData[VERSION_INDEX]);
 
         if (fileRepository.existsByFileName(newFileName))
             return fileRepository.getByFileName(newFileName).getFileId();
 
-        FileEntity newFile = saveNewFile(file, newFileName, fileData[FILE_NAME_INDEX], extension);
+        FileEntity newFile = saveNewFile(file, newFileName, fileData[FILE_NAME_INDEX], extension, version);
 
         return newFile.getFileId();
     }
@@ -190,12 +194,22 @@ public class FileServiceImpl implements FileService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(fileId))
         );
     }
-
+    private int getVersion(String BaseName) {
+        // Sprawdź, czy istnieje już plik o podanym originalFileName
+        if (fileRepository.existsByOriginalFileName(BaseName)) {
+            Integer maxVersion = fileRepository.findMaxVersionByOriginalFileName(BaseName);
+            System.out.println("Najwyższa obecna wersja dla oryginalnej nazwy " + BaseName + ": " + maxVersion);
+            return maxVersion +1;
+        } else {
+            // Jeśli plik o podanym originalFileName nie istnieje, zwróć wersję 1
+            return 1;
+        }
+    }
     private String[] getFileData(final @NonNull String originalFileName) {
-        return new String[]{getBaseName(originalFileName), getExtension(originalFileName)};
+        return new String[]{getBaseName(originalFileName), getExtension(originalFileName), String.valueOf(getVersion(getBaseName(originalFileName)))};
     }
 
-    private FileEntity saveNewFile(final MultipartFile file, final String name, final String originalName, final String extension) {
+    private FileEntity saveNewFile(final MultipartFile file, final String name, final String originalName, final String extension, final Integer version) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
@@ -219,7 +233,7 @@ public class FileServiceImpl implements FileService {
                 .creationDate(LocalDateTime.now())
                 .fileSize(file.getSize()) // in bytes
                 .extension(extension)
-                .version(1) // new file always version 1
+                .version(version) // new file always version 1
                 .backupReady(false)
                 .build();
 
