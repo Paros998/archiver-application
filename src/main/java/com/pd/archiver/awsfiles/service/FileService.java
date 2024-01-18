@@ -1,5 +1,6 @@
 package com.pd.archiver.awsfiles.service;
 
+import com.pd.archiver.awsfiles.api.FileDto;
 import com.pd.archiver.awsfiles.api.FileUrls;
 import com.pd.archiver.awsfiles.entity.FileEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +45,13 @@ public interface FileService {
      */
     FileUrls getFileUrls(UUID fileId);
 
+    /**
+     * TEST.
+     *
+     * @param fileId the file id
+     * @return the file by id
+     */
+    FileDto getFileByIdTest(UUID fileId);
     /**
      * Gets file by id.
      *

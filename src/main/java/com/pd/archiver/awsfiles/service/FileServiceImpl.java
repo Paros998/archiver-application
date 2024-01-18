@@ -4,10 +4,12 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.pd.archiver.application.security.UserAuthService;
+import com.pd.archiver.awsfiles.api.FileDto;
 import com.pd.archiver.awsfiles.api.FileUrls;
 import com.pd.archiver.awsfiles.config.S3Config;
 import com.pd.archiver.awsfiles.entity.FileEntity;
 import com.pd.archiver.awsfiles.repository.FileRepository;
+import com.pd.archiver.awsfiles.util.FileMapper;
 import com.pd.archiver.users.entity.UserEntity;
 import com.pd.archiver.users.service.UserService;
 import lombok.NonNull;
@@ -184,6 +186,12 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public FileDto getFileByIdTest(final UUID fileId) {
+        return fileRepository.findById(fileId).map(FileMapper::toFileDto).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(fileId))
+        );
+    }
     @Override
     public FileEntity getFileById(final UUID fileId) {
         return fileRepository.findById(fileId).orElseThrow(

@@ -1,7 +1,8 @@
 package com.pd.archiver.awsfiles.controller;
-
+import com.pd.archiver.awsfiles.api.FileDto;
 import com.pd.archiver.awsfiles.api.FileUrls;
 import com.pd.archiver.awsfiles.api.NameValidationRequest;
+import com.pd.archiver.awsfiles.entity.FileEntity;
 import com.pd.archiver.awsfiles.service.FileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,26 @@ import java.util.UUID;
 public class FilesController {
     private final FileService fileService;
 
+    /**
+     * TEST.
+     *
+     * @param fileId the file id
+     * @return the file
+     */
+    @GetMapping("{fileId}/test")
+    public FileDto getFileTest(final @NonNull @PathVariable UUID fileId) {
+        return fileService.getFileByIdTest(fileId);
+    }
+    /**
+     * Gets file.
+     *
+     * @param fileId the file id
+     * @return the file
+     */
+    @GetMapping("{fileId}/info")
+    public FileEntity getFile(final @NonNull @PathVariable UUID fileId) {
+        return fileService.getFileById(fileId);
+    }
     /**
      * Gets file url.
      *
