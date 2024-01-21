@@ -127,4 +127,14 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id: [%s] not found", userId)));
     }
 
+    @Override
+    @Transactional
+    public List<FileDto> getUserFilesByName(final UUID userId, String originalFileName) {
+        return fetchUserById(userId).getUserFiles().stream()
+                .filter(file -> file.getOriginalFileName().equals(originalFileName))
+                .sorted(FileEntityDateComparator::sortByNewest)
+                .map(FileMapper::toFileDto)
+                .toList();
+    }
+
 }

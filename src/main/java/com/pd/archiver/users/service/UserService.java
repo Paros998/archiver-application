@@ -78,4 +78,13 @@ public interface UserService extends UserDetailsService {
      * @return the last user files
      */
     List<FileDto> getLastUserFiles(UUID userId, int limit);
+
+    /**
+     * Gets last user files.
+     *
+     * @param userId the user id
+     * @param originalFileName the original file name
+     * @return the last user files
+     */
+    List<FileDto> getUserFilesByName(UUID userId, String originalFileName);
 }

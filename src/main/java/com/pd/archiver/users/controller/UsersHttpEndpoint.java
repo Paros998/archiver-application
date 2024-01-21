@@ -47,6 +47,19 @@ public class UsersHttpEndpoint {
     }
 
     /**
+     * Gets las user files.
+     *
+     * @param userId the user id
+     * @param originalFileName the original file name
+     * @return the las user files
+     */
+    @GetMapping("{userId}/{originalFileName}/files/")
+    public List<FileDto> getUserFilesByName(final @NonNull @PathVariable UUID userId,
+                                            final @NonNull @PathVariable String originalFileName) {
+        return userService.getUserFilesByName(userId, originalFileName);
+    }
+
+    /**
      * Gets user by id.
      *
      * @param userId the user id
